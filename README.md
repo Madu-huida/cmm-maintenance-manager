@@ -81,15 +81,15 @@ Padrões de Projeto aplicados:
 # 🛠️ Tecnologias Escolhidas
 
 * **Back-end:** Java + Spring Boot. (Garante robustez transacional e agilidade na criação da API REST, além de estar alinhado com as práticas da disciplina).
-* **Front-end:** React ou Vue.js. (Criação de dashboards dinâmicos para visualização dos equipamentos e chamados em tempo real).
-* **Banco de Dados:** PostgreSQL. (Relacional, garantindo as *constraints* e a integridade referencial entre Ativos, Usuários e Ordens de Manutenção).
+* **Front-end:** React (Criação de dashboards dinâmicos para visualização dos equipamentos e chamados em tempo real).
+* **Banco de Dados:** MySQL. (Relacional, garantindo as *constraints* e a integridade referencial entre Ativos, Usuários e Ordens de Manutenção).
 * **Infraestrutura:** Repositório no GitHub/GitLab, versionamento estruturado, testes unitários (JUnit) e deploy contínuo (CI/CD).
 
 ---
 
 # 📋 Organização e Plano de Trabalho
 
-O desenvolvimento do projeto será realizado de forma individual (Full Stack). [cite_start]O fluxo de trabalho será gerenciado visualmente através de um quadro Kanban (Trello), garantindo o cumprimento dos *check-points* quinzenais da disciplina[cite: 6].
+O desenvolvimento do projeto será realizado de forma individual (Full Stack).
 
 * **Desenvolvedora Responsável:** Maria Eduarda Huida
 * **Escopo de Atuação:** * Modelagem e administração do banco de dados relacional.
