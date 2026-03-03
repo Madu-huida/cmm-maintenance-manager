@@ -24,32 +24,30 @@ Fornecer uma plataforma ágil e confiável capaz de:
 
 ---
 
-# 🧱 Funcionalidades Principais
+## 🧱 Funcionalidades Principais
 
----
-
-## 🏢 1. Gestão de Ativos e Locais (CRUD)
+### 🏢 1. Gestão de Ativos e Locais (CRUD)
 O "coração" do inventário da empresa. Cada registro possui:
 * Nome do Equipamento (ex: Elevador Social Bloco B, Chiller 01)
 * Categoria e Número de Série
 * Localização (ex: Andar 2, Setor de Produção)
 * Status Operacional (Online / Offline / Em Manutenção)
 
-Operações:
-* Criar, Listar, Atualizar e Inativar equipamentos.
+**Operações:** Criar, Listar, Atualizar e Inativar equipamentos.
 
-## 👥 2. Gestão de Equipe Técnica (CRUD)
+### 👥 2. Gestão de Equipe Técnica (CRUD)
 * Cadastro de técnicos, suas especialidades (Elétrica, Mecânica, Predial) e disponibilidade.
 
 ---
 
-# 🔄 Transação Principal — Ciclo da Ordem de Manutenção (OM)
+## 🔄 Transação Principal — Ciclo da Ordem de Manutenção (OM)
 
 O fluxo principal do sistema garante que um reparo seja executado e devidamente registrado com integridade de dados:
 
 1. **Abertura:** Um usuário reporta uma falha. A OM é gerada vinculada a um Ativo. O status do Ativo muda automaticamente para `OFFLINE`.
 2. **Atribuição:** O sistema ou o gestor designa a OM para um Técnico específico.
-3. **Execução e Transação (Fechamento):** * O técnico preenche o laudo, insere as horas trabalhadas e os custos de peças.
+3. **Execução e Transação (Fechamento):**
+   * O técnico preenche o laudo, insere as horas trabalhadas e os custos de peças.
    * Ao clicar em "Finalizar OM", o sistema executa uma transação que:
      * Calcula o custo total da manutenção.
      * Altera o status da OM para `CONCLUÍDA`.
@@ -59,7 +57,7 @@ O fluxo principal do sistema garante que um reparo seja executado e devidamente 
 
 ---
 
-# 🔐 Controle de Acesso
+## 🔐 Controle de Acesso
 Segurança e roteamento baseados em perfis via **JWT (JSON Web Token)**.
 
 * **Solicitante (Usuário Comum):** Pode apenas abrir chamados para equipamentos quebrados e ver o status do seu chamado.
@@ -68,32 +66,49 @@ Segurança e roteamento baseados em perfis via **JWT (JSON Web Token)**.
 
 ---
 
-# 🏗️ Arquitetura e Padrões de Projeto
-[cite_start]O sistema adota uma arquitetura **Client-Server** [cite: 43][cite_start], implementado como uma **Single-Page Application (SPA)**[cite: 37, 38]. 
+## 🏗️ Arquitetura e Padrões de Projeto
 
-Padrões de Projeto aplicados:
-* [cite_start]**Injeção de Dependência / IoC:** Utilizado no back-end para desacoplamento de serviços[cite: 16, 19].
-* [cite_start]**State Pattern:** Para o gerenciamento rigoroso dos estados da Ordem de Manutenção[cite: 14].
-* [cite_start]**MVC/MV*:** Separação clara de responsabilidades entre a interface, o controle de requisições e a regra de negócio[cite: 52].
+O sistema será estruturado seguindo os modelos modernos de desenvolvimento web:
 
----
+### Modelo Arquitetural
+* **Client-Server:** Separação clara entre o provedor de recursos (Back-end) e o consumidor (Front-end).
+* **SPA (Single-Page Application):** A interface será carregada uma única vez, proporcionando uma experiência de uso fluida.
+* **Arquitetura em Camadas (MV*):** Separação da lógica de negócio (Model), da interface de usuário (View) e da orquestração das requisições (Controller).
 
-# 🛠️ Tecnologias Escolhidas
-
-* **Back-end:** Java + Spring Boot. (Garante robustez transacional e agilidade na criação da API REST, além de estar alinhado com as práticas da disciplina).
-* **Front-end:** React (Criação de dashboards dinâmicos para visualização dos equipamentos e chamados em tempo real).
-* **Banco de Dados:** MySQL. (Relacional, garantindo as *constraints* e a integridade referencial entre Ativos, Usuários e Ordens de Manutenção).
-* **Infraestrutura:** Repositório no GitHub/GitLab, versionamento estruturado, testes unitários (JUnit) e deploy contínuo (CI/CD).
+### Padrões de Projeto (Design Patterns)
+* **Injeção de Dependência (IoC):** Reduz o acoplamento entre as classes de serviço e repositórios, facilitando a manutenção e testes.
+* **State Pattern:** Garante que as transições de status da Ordem de Manutenção (Aberta -> Em Atendimento -> Concluída) sigam regras lógicas rígidas.
+* **Singleton:** Utilizado para gerenciar instâncias únicas de serviços e configurações.
+* **Strategy:** Para o cálculo de custos de manutenção, permitindo diferentes fórmulas dependendo do ativo.
 
 ---
 
-# 📋 Organização e Plano de Trabalho
+## 🛠️ Tecnologias e Justificativas
+
+* **Back-end: Java + Spring Boot.** Escolhido pela robustez no tratamento de **Transações ACID** (fundamental para o fechamento de OMs) e pela facilidade de implementar Segurança (JWT) e Injeção de Dependência.
+* **Front-end: React.** Justifica-se pela necessidade de uma interface dinâmica (SPA) que permita ao gestor visualizar o status dos ativos em tempo real.
+* **Banco de Dados: MySQL.** A escolha por um banco relacional garante a integridade referencial entre o inventário de ativos e o histórico de manutenções.
+* **Infraestrutura: Git/GitHub.** Utilizado para versionamento estruturado e como base para a esteira de CI/CD e testes automatizados (JUnit).
+
+---
+
+## 📂 Artefatos de Especificação (Repositório)
+
+1. **README.md / Wiki:** Documentação completa do escopo e visão do produto.
+2. **Diagrama de Entidade-Relacionamento (DER):** Modelagem das tabelas de Ativos, Usuários e OMs.
+3. **Documentação da API:** Mapeamento dos endpoints REST (Swagger).
+4. **Plano de Testes (TDD):** Definição dos testes unitários críticos (ex: validação de cálculo de horas e troca de status de ativos).
+
+---
+
+## 📋 Organização e Plano de Trabalho
 
 O desenvolvimento do projeto será realizado de forma individual (Full Stack).
 
 * **Desenvolvedora Responsável:** Maria Eduarda Huida
-* **Escopo de Atuação:** * Modelagem e administração do banco de dados relacional.
+* **Escopo de Atuação:**
+  * Modelagem e administração do banco de dados relacional.
   * Desenvolvimento da API REST em Java (Spring Boot) com autenticação JWT.
-  * Estruturação da Single-Page Application (SPA) no front-end.
+  * Estruturação da Single-Page Application (SPA) no front-end em React.
   * Implementação da lógica de transação (fechamento de Ordens de Manutenção) e cobertura de testes.
   * Configuração da esteira de CI/CD para deploy da aplicação em produção.
