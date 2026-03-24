@@ -1,114 +1,101 @@
 # ⚙️ CMM - Computerized Maintenance Manager
 
----
+## Domínio do Problema e Escopo
+Empresas que possuem infraestrutura física (prédios corporativos, indústrias, shoppings) lidam com uma grande quantidade de ativos, como elevadores, geradores, sistemas de ar-condicionado (HVAC) e maquinário industrial. O controle manual ou via planilhas dessas manutenções gera falta de visibilidade sobre o histórico de quebras, esquecimento de manutenções preventivas e dificuldade em calcular o custo total de operação (TCO).
 
-## 📜 Domínio do Problema (Escopo)
+O CMM é uma aplicação web focada em centralizar o cadastro de ativos e orquestrar as Ordens de Manutenção (preventivas e corretivas). O sistema possui um controle de acesso baseado em perfis: Gestores/Admins gerenciam todo o inventário e a equipe, Técnicos executam e laudam os serviços, e Solicitantes apenas abrem chamados de falha. O fluxo garante que a infraestrutura da empresa opere sem paradas inesperadas e com integridade no rastreamento de custos e tempo de inatividade (*downtime*).
 
-Empresas que possuem infraestrutura física (prédios corporativos, indústrias, shoppings) lidam com uma grande quantidade de ativos, como elevadores, geradores, sistemas de ar-condicionado (HVAC) e maquinário industrial. O controle manual ou via planilhas dessas manutenções gera:
-* Falta de visibilidade sobre o histórico de quebras de um equipamento.
-* Esquecimento de manutenções preventivas (o que gera multas ou acidentes).
-* Dificuldade em calcular o custo total de operação (TCO) de uma máquina.
-* Falha na comunicação entre quem reporta o problema e a equipe técnica.
+## Stack Tecnológico e Infraestrutura
+[cite_start]A arquitetura do sistema explora o modelo Client-Server [cite: 208, 209] [cite_start]utilizando tecnologias modernas para garantir alta disponibilidade, segurança e separação de responsabilidades (padrão MV*)[cite: 308].
 
-O **CMM** é uma aplicação web desenvolvida para centralizar o cadastro de ativos e orquestrar as Ordens de Manutenção (preventivas e corretivas), garantindo que a infraestrutura da empresa opere sem paradas inesperadas.
+### Front-end (Client-side)
+A interface do usuário é uma Single-Page Application (SPA) [cite: 153] construída com React. O ecossistema do React foi escolhido por facilitar a criação de dashboards interativos e pela sua alta reatividade, uma característica essencial para a camada de View, que precisa renderizar o status das máquinas e a fila de chamados em tempo real sem recarregar a página.
 
----
+### Back-end (Server-side)
+O núcleo lógico do sistema é centralizado em um back-end monolítico desenvolvido em Java com o framework Spring Boot. Esta escolha se justifica pela excelência do ecossistema Java em lidar com transações rígidas (garantindo as propriedades ACID) e pela facilidade na implementação de Inversão de Controle e Injeção de Dependência (IoC)[cite: 50, 72]. O back-end é responsável por gerenciar a segurança (via JWT) e orquestrar o padrão de estados (State Pattern) do ciclo de vida das Ordens de Manutenção.
 
-## 🎯 Objetivo do Sistema
+### Persistência de Dados
+Para o armazenamento não volátil, optou-se pelo MySQL. A escolha por um banco de dados relacional justifica-se pela necessidade de modelar relações rígidas (Ativo -> Ordem de Manutenção -> Técnico) e garantir a integridade referencial absoluta durante o fechamento de um serviço e cálculo de custos.
 
-Fornecer uma plataforma ágil e confiável capaz de:
-* Cadastrar e categorizar os equipamentos e locais da empresa.
-* Registrar chamados de problemas (manutenção corretiva).
-* Controlar o ciclo de vida de uma Ordem de Manutenção (Aberta -> Em Atendimento -> Concluída).
-* Rastrear o tempo de inatividade (*downtime*) e os custos envolvidos no reparo.
+### Infraestrutura e Qualidade
+Para sustentar o ciclo de vida da aplicação, o ecossistema conta com as seguintes ferramentas:
+* **Versionamento e Deploy:** Controle de código via Git com automação de CI/CD, garantindo entregas contínuas em ambiente de produção.
+* **Documentação de API:** O contrato da API REST é mapeado e documentado utilizando o Swagger (OpenAPI).
+* **Testes Automatizados:** Utilização do framework JUnit para aplicar o TDD (Test Driven Development) nas rotas e serviços críticos, como as transações de mudança de status de ativos e cálculos de horas/peças.
 
----
+## Requisitos do Sistema
 
-## 🧱 Funcionalidades Principais
+### Requisitos Funcionais (RF)
+| ID | Descrição |
+| :--- | :--- |
+| **RF01** | O sistema deve possuir autenticação e autorização baseada em perfis (Solicitante, Técnico, Gestor) utilizando tokens JWT. |
+| **RF02** | O sistema deve permitir que o Gestor realize o CRUD de Ativos, categorizando-os e definindo suas localizações. |
+| **RF03** | O sistema deve permitir o cadastro de Técnicos, definindo suas especialidades (Mecânica, Elétrica, etc.). |
+| **RF04** | O sistema deve permitir a abertura de Ordens de Manutenção (OMs), classificando-as obrigatoriamente como Preventiva ou Corretiva. |
+| **RF05** | O sistema deve alterar automaticamente o status de um Ativo para "OFFLINE" assim que uma OM corretiva for aberta para ele. |
+| **RF06** | O sistema deve permitir o gerenciamento de status da OM (Aberta -> Em Atendimento -> Aguardando Peça -> Concluída). |
+| **RF07** | O sistema deve executar uma transação no fechamento da OM que calcule o custo total, mude a OM para "CONCLUÍDA" e retorne o Ativo para "ONLINE". |
+| **RF08** | O sistema deve exibir dashboards com o status atualizado do inventário e histórico de custos. |
 
-### 🏢 1. Gestão de Ativos e Locais (CRUD)
-O "coração" do inventário da empresa. Cada registro possui:
-* Nome do Equipamento (ex: Elevador Social Bloco B, Chiller 01)
-* Categoria e Número de Série
-* Localização (ex: Andar 2, Setor de Produção)
-* Status Operacional (Online / Offline / Em Manutenção)
+### Requisitos Não Funcionais (RNF)
+| ID | Categoria | Descrição |
+| :--- | :--- | :--- |
+| **RNF01** | Interface | [cite_start]A interface do usuário deve ser construída como uma SPA [cite: 153] utilizando React. |
+| **RNF02** | Back-end | [cite_start]A API REST deve ser desenvolvida em Java com Spring Boot utilizando Injeção de Dependência[cite: 50, 72]. |
+| **RNF03** | Banco de Dados | O armazenamento deve ser feito em MySQL para garantir integridade referencial e transacional. |
+| **RNF04** | Segurança | O acesso às rotas da API deve ser protegido por autenticação via JWT (JSON Web Token). |
+| **RNF05** | Testes | As regras de negócio da transação de fechamento de OM devem ser cobertas por testes automatizados em JUnit. |
+| **RNF06** | Documentação | O contrato da API REST deve ser documentado utilizando Swagger. |
+| **RNF07** | Integridade | Se houver erro no cálculo de custos durante o fechamento de uma OM, o banco de dados deve realizar um *rollback* da transação. |
 
-**Operações:** Criar, Listar, Atualizar e Inativar equipamentos.
+## Casos de Uso Principais
+Abaixo estão exemplos dos principais fluxos de interação entre os atores e o sistema:
 
-### 👥 2. Gestão de Equipe Técnica (CRUD)
-* Cadastro de técnicos, suas especialidades (Elétrica, Mecânica, Predial) e disponibilidade.
+* **UC01 - Gerenciar Ativos (CRUD):** * **Ator:** Gestor. 
+  * **Descrição:** O Gestor acessa o painel de administração e cadastra um novo equipamento (ex: Chiller 01), informando sua categoria, número de série e localização.
+* **UC02 - Abertura de Chamado:** * **Ator:** Solicitante. 
+  * **Descrição:** O Solicitante reporta que um equipamento quebrou. O sistema gera uma OM Corretiva e imediatamente altera o status do ativo para "OFFLINE".
+* **UC03 - Execução e Fechamento de OM:** * **Ator:** Técnico. 
+  * **Descrição:** O Técnico assume a OM, realiza o conserto e insere o laudo com horas trabalhadas e peças usadas. Ao finalizar, o sistema calcula os custos e retorna a máquina para o status "ONLINE".
+* **UC04 - Pausa por Falta de Material:** * **Ator:** Técnico. 
+  * **Descrição:** O Técnico inicia o atendimento, mas percebe que falta uma peça. Ele altera o status do sistema para "Aguardando Peça", pausando o medidor de tempo de atendimento (*SLA*).
 
----
+## Diagrama C4
 
-## 🔄 Transação Principal — Ciclo da Ordem de Manutenção (OM)
+### Nível 1: Diagrama de Contexto
 
-O fluxo principal do sistema garante que um reparo seja executado e devidamente registrado com integridade de dados:
+```mermaid
+%%{init: {"theme": "default"}}%%
+C4Context
+    title Diagrama de Contexto (Nível 1) - CMM
 
-1. **Abertura:** Um usuário reporta uma falha. A OM é gerada vinculada a um Ativo. O status do Ativo muda automaticamente para `OFFLINE`.
-2. **Atribuição:** O sistema ou o gestor designa a OM para um Técnico específico.
-3. **Execução e Transação (Fechamento):**
-   * O técnico preenche o laudo, insere as horas trabalhadas e os custos de peças.
-   * Ao clicar em "Finalizar OM", o sistema executa uma transação que:
-     * Calcula o custo total da manutenção.
-     * Altera o status da OM para `CONCLUÍDA`.
-     * Retorna o status do Ativo para `ONLINE`.
-     * Salva no histórico de confiabilidade do equipamento.
-   * **Regra ACID:** Se qualquer parte desse fechamento falhar (ex: erro no cálculo de custos), o status da máquina não volta para online e a OM não é fechada, evitando dados corrompidos.
+    Person(solicitante, "Solicitante", "Reporta falhas nos equipamentos.")
+    Person(tecnico, "Técnico", "Executa o serviço e fecha OMs.")
+    Person(gestor, "Gestor", "Administra ativos e analisa custos.")
 
----
+    System(cmm, "CMM", "Plataforma central para gestão de manutenções.")
 
-## 🔐 Controle de Acesso
-Segurança e roteamento baseados em perfis via **JWT (JSON Web Token)**.
+    Rel(solicitante, cmm, "Abre chamados de falha")
+    Rel(tecnico, cmm, "Registra execuções e laudos")
+    Rel(gestor, cmm, "Gerencia inventário")
+```
 
-* **Solicitante (Usuário Comum):** Pode apenas abrir chamados para equipamentos quebrados e ver o status do seu chamado.
-* **Técnico:** Visualiza a fila de OMs atribuídas, insere laudos e finaliza os serviços.
-* **Gestor/Admin:** Tem acesso total ao CRUD de Ativos, cadastra técnicos e extrai relatórios de custos e paradas.
+### Nível 2: Diagrama de Containers
 
----
+```mermaid
+%%{init: {"theme": "default"}}%%
+C4Container
+    title Diagrama de Container (Nível 2) - CMM
 
-## 🏗️ Arquitetura e Padrões de Projeto
+    Person(usuario, "Usuários do CMM", "Solicitantes, Técnicos e Gestores.")
 
-O sistema será estruturado seguindo os modelos modernos de desenvolvimento web:
+    System_Boundary(c1, "Computerized Maintenance Manager") {
+        Container(spa, "SPA Front-end", "React, JS", "Interface web.")
+        Container(api, "API RESTful", "Java, Spring Boot", "Gerencia transações.")
+        ContainerDb(db, "Banco de Dados", "MySQL", "Armazena informações.")
+    }
 
-### Modelo Arquitetural
-* **Client-Server:** Separação clara entre o provedor de recursos (Back-end) e o consumidor (Front-end).
-* **SPA (Single-Page Application):** A interface será carregada uma única vez, proporcionando uma experiência de uso fluida.
-* **Arquitetura em Camadas (MV*):** Separação da lógica de negócio (Model), da interface de usuário (View) e da orquestração das requisições (Controller).
-
-### Padrões de Projeto (Design Patterns)
-* **Injeção de Dependência (IoC):** Reduz o acoplamento entre as classes de serviço e repositórios, facilitando a manutenção e testes.
-* **State Pattern:** Garante que as transições de status da Ordem de Manutenção (Aberta -> Em Atendimento -> Concluída) sigam regras lógicas rígidas.
-* **Singleton:** Utilizado para gerenciar instâncias únicas de serviços e configurações.
-* **Strategy:** Para o cálculo de custos de manutenção, permitindo diferentes fórmulas dependendo do ativo.
-
----
-
-## 🛠️ Tecnologias e Justificativas
-
-* **Back-end: Java + Spring Boot.** Escolhido pela robustez no tratamento de **Transações ACID** (fundamental para o fechamento de OMs) e pela facilidade de implementar Segurança (JWT) e Injeção de Dependência.
-* **Front-end: React.** Justifica-se pela necessidade de uma interface dinâmica (SPA) que permita ao gestor visualizar o status dos ativos em tempo real.
-* **Banco de Dados: MySQL.** A escolha por um banco relacional garante a integridade referencial entre o inventário de ativos e o histórico de manutenções.
-* **Infraestrutura: Git/GitHub.** Utilizado para versionamento estruturado e como base para a esteira de CI/CD e testes automatizados (JUnit).
-
----
-
-## 📂 Artefatos de Especificação (Repositório)
-
-1. **README.md / Wiki:** Documentação completa do escopo e visão do produto.
-2. **Diagrama de Entidade-Relacionamento (DER):** Modelagem das tabelas de Ativos, Usuários e OMs.
-3. **Documentação da API:** Mapeamento dos endpoints REST (Swagger).
-4. **Plano de Testes (TDD):** Definição dos testes unitários críticos (ex: validação de cálculo de horas e troca de status de ativos).
-
----
-
-## 📋 Organização e Plano de Trabalho
-
-O desenvolvimento do projeto será realizado de forma individual (Full Stack).
-
-* **Desenvolvedora Responsável:** Maria Eduarda Huida
-* **Escopo de Atuação:**
-  * Modelagem e administração do banco de dados relacional.
-  * Desenvolvimento da API REST em Java (Spring Boot) com autenticação JWT.
-  * Estruturação da Single-Page Application (SPA) no front-end em React.
-  * Implementação da lógica de transação (fechamento de Ordens de Manutenção) e cobertura de testes.
-  * Configuração da esteira de CI/CD para deploy da aplicação em produção.
+    Rel(usuario, spa, "Acessa via WEB", "HTTPS")
+    Rel(spa, api, "Faz chamadas de API", "JSON/HTTPS")
+    Rel(api, db, "Lê e escreve dados", "JDBC/SQL")
+```
