@@ -6,13 +6,13 @@ Empresas que possuem infraestrutura física (prédios corporativos, indústrias,
 O CMM é uma aplicação web focada em centralizar o cadastro de ativos e orquestrar as Ordens de Manutenção (preventivas e corretivas). O sistema possui um controle de acesso baseado em perfis: Gestores/Admins gerenciam todo o inventário e a equipe, Técnicos executam e laudam os serviços, e Solicitantes apenas abrem chamados de falha. O fluxo garante que a infraestrutura da empresa opere sem paradas inesperadas e com integridade no rastreamento de custos e tempo de inatividade (*downtime*).
 
 ## Stack Tecnológico e Infraestrutura
-[cite_start]A arquitetura do sistema explora o modelo Client-Server [cite: 208, 209] [cite_start]utilizando tecnologias modernas para garantir alta disponibilidade, segurança e separação de responsabilidades (padrão MV*)[cite: 308].
+A arquitetura do sistema explora o modelo Client-Server utilizando tecnologias modernas para garantir alta disponibilidade, segurança e separação de responsabilidades.
 
 ### Front-end (Client-side)
-A interface do usuário é uma Single-Page Application (SPA) [cite: 153] construída com React. O ecossistema do React foi escolhido por facilitar a criação de dashboards interativos e pela sua alta reatividade, uma característica essencial para a camada de View, que precisa renderizar o status das máquinas e a fila de chamados em tempo real sem recarregar a página.
+A interface do usuário é uma Single-Page Application (SPA) construída com React. O ecossistema do React foi escolhido por facilitar a criação de dashboards interativos e pela sua alta reatividade, uma característica essencial para a camada de View, que precisa renderizar o status das máquinas e a fila de chamados em tempo real sem recarregar a página.
 
 ### Back-end (Server-side)
-O núcleo lógico do sistema é centralizado em um back-end monolítico desenvolvido em Java com o framework Spring Boot. Esta escolha se justifica pela excelência do ecossistema Java em lidar com transações rígidas (garantindo as propriedades ACID) e pela facilidade na implementação de Inversão de Controle e Injeção de Dependência (IoC)[cite: 50, 72]. O back-end é responsável por gerenciar a segurança (via JWT) e orquestrar o padrão de estados (State Pattern) do ciclo de vida das Ordens de Manutenção.
+O núcleo lógico do sistema é centralizado em um back-end monolítico desenvolvido em Java com o framework Spring Boot. Esta escolha se justifica pela excelência do ecossistema Java em lidar com transações rígidas (garantindo as propriedades ACID) e pela facilidade na implementação de Inversão de Controle e Injeção de Dependência (IoC). O back-end é responsável por gerenciar a segurança (via JWT) e orquestrar o padrão de estados (State Pattern) do ciclo de vida das Ordens de Manutenção.
 
 ### Persistência de Dados
 Para o armazenamento não volátil, optou-se pelo MySQL. A escolha por um banco de dados relacional justifica-se pela necessidade de modelar relações rígidas (Ativo -> Ordem de Manutenção -> Técnico) e garantir a integridade referencial absoluta durante o fechamento de um serviço e cálculo de custos.
@@ -40,8 +40,8 @@ Para sustentar o ciclo de vida da aplicação, o ecossistema conta com as seguin
 ### Requisitos Não Funcionais (RNF)
 | ID | Categoria | Descrição |
 | :--- | :--- | :--- |
-| **RNF01** | Interface | [cite_start]A interface do usuário deve ser construída como uma SPA [cite: 153] utilizando React. |
-| **RNF02** | Back-end | [cite_start]A API REST deve ser desenvolvida em Java com Spring Boot utilizando Injeção de Dependência[cite: 50, 72]. |
+| **RNF01** | Interface | A interface do usuário deve ser construída como uma SPA utilizando React. |
+| **RNF02** | Back-end | A API REST deve ser desenvolvida em Java com Spring Boot utilizando Injeção de Dependência. |
 | **RNF03** | Banco de Dados | O armazenamento deve ser feito em MySQL para garantir integridade referencial e transacional. |
 | **RNF04** | Segurança | O acesso às rotas da API deve ser protegido por autenticação via JWT (JSON Web Token). |
 | **RNF05** | Testes | As regras de negócio da transação de fechamento de OM devem ser cobertas por testes automatizados em JUnit. |
@@ -51,13 +51,13 @@ Para sustentar o ciclo de vida da aplicação, o ecossistema conta com as seguin
 ## Casos de Uso Principais
 Abaixo estão exemplos dos principais fluxos de interação entre os atores e o sistema:
 
-* **UC01 - Gerenciar Ativos (CRUD):** * **Ator:** Gestor. 
+* **UC01 - Gerenciar Ativos (CRUD):** **Ator:** Gestor. 
   * **Descrição:** O Gestor acessa o painel de administração e cadastra um novo equipamento (ex: Chiller 01), informando sua categoria, número de série e localização.
-* **UC02 - Abertura de Chamado:** * **Ator:** Solicitante. 
+* **UC02 - Abertura de Chamado:** **Ator:** Solicitante. 
   * **Descrição:** O Solicitante reporta que um equipamento quebrou. O sistema gera uma OM Corretiva e imediatamente altera o status do ativo para "OFFLINE".
-* **UC03 - Execução e Fechamento de OM:** * **Ator:** Técnico. 
+* **UC03 - Execução e Fechamento de OM:** **Ator:** Técnico. 
   * **Descrição:** O Técnico assume a OM, realiza o conserto e insere o laudo com horas trabalhadas e peças usadas. Ao finalizar, o sistema calcula os custos e retorna a máquina para o status "ONLINE".
-* **UC04 - Pausa por Falta de Material:** * **Ator:** Técnico. 
+* **UC04 - Pausa por Falta de Material:** **Ator:** Técnico. 
   * **Descrição:** O Técnico inicia o atendimento, mas percebe que falta uma peça. Ele altera o status do sistema para "Aguardando Peça", pausando o medidor de tempo de atendimento (*SLA*).
 
 ## Diagrama C4
