@@ -99,3 +99,29 @@ C4Container
     Rel(spa, api, "Faz chamadas de API", "JSON/HTTPS")
     Rel(api, db, "Lê e escreve dados", "JDBC/SQL")
 ```
+
+### Nível 3: Diagrama de Componentes (Back-end)
+
+```mermaid
+%%{init: {"theme": "default"}}%%
+C4Component
+    title Diagrama de Componentes (Nível 3) - API CMM
+
+    Container_Boundary(api, "API RESTful (Spring Boot)") {
+        Component(controllers, "Controllers", "Rest Controllers", "Recebem requisições HTTP do Front-end.")
+        Component(auth, "Authentication", "JWT Security", "Valida tokens de acesso e perfis de usuário.")
+        Component(services, "Services", "Spring Services", "Executam as regras de negócio e transações.")
+        Component(repositories, "Repositories", "Spring Data JPA", "Realizam o acesso direto ao banco de dados.")
+        Component(models, "Models / DTOs", "Java Classes", "Mapeamento das entidades e transferência de dados.")
+    }
+
+    ContainerDb(db, "Banco de Dados", "MySQL", "Armazena informações do sistema.")
+
+    Rel(controllers, auth, "Valida usuário", "Filtro de Segurança")
+    Rel(controllers, services, "Chama métodos", "Injeção de Dependência")
+    Rel(controllers, models, "Usa", "Manipulação de dados")
+    Rel(services, repositories, "Utiliza", "Chamada de interface")
+    Rel(repositories, models, "Mapeia", "JPA/Hibernate")
+    Rel(repositories, db, "Consulta e Grava", "JDBC/SQL")
+```
+
