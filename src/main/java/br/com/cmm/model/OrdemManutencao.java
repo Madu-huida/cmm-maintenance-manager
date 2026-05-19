@@ -27,7 +27,6 @@ public class OrdemManutencao {
     @Column(nullable = false)
     private StatusOrdem status = StatusOrdem.ABERTA;
 
-    // Relacionamento: Várias ordens podem pertencer a um Ativo
     @ManyToOne
     @JoinColumn(name = "ativo_id", nullable = false)
     private Ativo ativo;
