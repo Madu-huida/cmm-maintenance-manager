@@ -27,10 +27,10 @@ function App() {
   };
 
   const tema = {
-    container: { backgroundColor: '#e2e2e2', color: '#000000', minHeight: '100vh', padding: '30px', fontFamily: 'sans-serif' },
+    container: { backgroundColor: '#5a5a5aff', color: '#000000', minHeight: '100vh', padding: '30px', fontFamily: 'sans-serif' },
     cabecalho: { borderBottom: '2px solid #000', marginBottom: '20px', paddingBottom: '10px' },
     grid: { display: 'flex', gap: '20px', flexWrap: 'wrap' },
-    cartao: { flex: 1, minWidth: '300px', backgroundColor: '#d4d4d4', padding: '20px', borderRadius: '4px', border: '1px solid #999' },
+    cartao: { flex: 1, minWidth: '300px', backgroundColor: '#5a5a5aff', padding: '20px', borderRadius: '4px', border: '1px solid #4f4f4fff' },
     lista: { listStyle: 'none', padding: 0 },
     item: { borderBottom: '1px solid #999', padding: '15px 0' }
   };
