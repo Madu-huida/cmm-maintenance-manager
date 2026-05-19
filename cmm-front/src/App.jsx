@@ -1,55 +1,81 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react';
 
 function App() {
-  const [ativos, setAtivos] = useState([])
+  const [ativos, setAtivos] = useState([]);
+  const [ordens, setOrdens] = useState([]);
 
-  // Busca os dados no Back-end assim que a tela carrega
   useEffect(() => {
-    fetch('http://localhost:8080/api/ativos')
-      .then(response => response.json())
-      .then(data => setAtivos(data))
-      .catch(error => console.error("Erro ao buscar a API:", error))
-  }, [])
+    carregarDados();
+  }, []);
+
+  const carregarDados = async () => {
+    try {
+      const resAtivos = await fetch('http://localhost:8080/api/ativos');
+      if (resAtivos.ok) {
+        const dataAtivos = await resAtivos.json();
+        setAtivos(dataAtivos);
+      }
+
+      const resOrdens = await fetch('http://localhost:8080/api/ordens');
+      if (resOrdens.ok) {
+        const dataOrdens = await resOrdens.json();
+        setOrdens(dataOrdens);
+      }
+    } catch (error) {
+      console.error("Erro de conexão com a API:", error);
+    }
+  };
+
+  const tema = {
+    container: { backgroundColor: '#e2e2e2', color: '#000000', minHeight: '100vh', padding: '30px', fontFamily: 'sans-serif' },
+    cabecalho: { borderBottom: '2px solid #000', marginBottom: '20px', paddingBottom: '10px' },
+    grid: { display: 'flex', gap: '20px', flexWrap: 'wrap' },
+    cartao: { flex: 1, minWidth: '300px', backgroundColor: '#d4d4d4', padding: '20px', borderRadius: '4px', border: '1px solid #999' },
+    lista: { listStyle: 'none', padding: 0 },
+    item: { borderBottom: '1px solid #999', padding: '15px 0' }
+  };
 
   return (
-    <div style={{ padding: '20px', fontFamily: 'Arial' }}>
-      <h1>CMM - Dashboard de Ativos</h1>
-      <p>Lista de equipamentos cadastrados no sistema.</p>
+    <div style={tema.container}>
+      <header style={tema.cabecalho}>
+        <h1>CMM - Gestão de Manutenção</h1>
+      </header>
 
-      <table border="1" style={{ width: '100%', textAlign: 'left', borderCollapse: 'collapse' }}>
-        <thead style={{ backgroundColor: '#f4f4f4' }}>
-          <tr>
-            <th style={{ padding: '10px' }}>ID</th>
-            <th style={{ padding: '10px' }}>Nome</th>
-            <th style={{ padding: '10px' }}>Categoria</th>
-            <th style={{ padding: '10px' }}>Localização</th>
-            <th style={{ padding: '10px' }}>Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          {ativos.length === 0 ? (
-            <tr>
-              <td colSpan="5" style={{ padding: '10px', textAlign: 'center' }}>
-                Nenhum ativo cadastrado ainda. (Banco de dados vazio)
-              </td>
-            </tr>
-          ) : (
-            ativos.map((ativo) => (
-              <tr key={ativo.id}>
-                <td style={{ padding: '10px' }}>{ativo.id}</td>
-                <td style={{ padding: '10px' }}>{ativo.nome}</td>
-                <td style={{ padding: '10px' }}>{ativo.categoria}</td>
-                <td style={{ padding: '10px' }}>{ativo.localizacao}</td>
-                <td style={{ padding: '10px', color: ativo.status === 'ONLINE' ? 'green' : 'red' }}>
-                  <strong>{ativo.status}</strong>
-                </td>
-              </tr>
-            ))
+      <main style={tema.grid}>
+        {/* Painel de Ativos */}
+        <section style={tema.cartao}>
+          <h2>Inventário de Ativos</h2>
+          {ativos.length === 0 ? <p>Nenhum ativo cadastrado no sistema.</p> : (
+            <ul style={tema.lista}>
+              {ativos.map(ativo => (
+                <li key={ativo.id} style={tema.item}>
+                  <strong>{ativo.nome}</strong> - {ativo.categoria} <br />
+                  Local: {ativo.localizacao} | Status: {ativo.status}
+                </li>
+              ))}
+            </ul>
           )}
-        </tbody>
-      </table>
+        </section>
+
+        {/* Painel de Ordens */}
+        <section style={tema.cartao}>
+          <h2>Ordens de Manutenção</h2>
+          {ordens.length === 0 ? <p>Nenhuma ordem aberta no momento.</p> : (
+            <ul style={tema.lista}>
+              {ordens.map(ordem => (
+                <li key={ordem.id} style={tema.item}>
+                  <strong>Ordem #{ordem.id}</strong> <br />
+                  Descrição: {ordem.descricao} <br />
+                  Equipamento: {ordem.ativo?.nome} <br />
+                  Status atual: {ordem.status}
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
+      </main>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
