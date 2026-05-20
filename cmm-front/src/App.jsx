@@ -60,7 +60,7 @@ function App() {
     caixaAcesso: { backgroundColor: '#c3dfecff', padding: '40px', borderRadius: '4px', border: '1px solid #999', width: '100%', maxWidth: '400px', textAlign: 'center' },
     header: { borderBottom: '2px solid #aad2efff', padding: '20px 30px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#c3dfecff' },
     grid: { display: 'flex', gap: '20px', flexWrap: 'wrap', padding: '30px' },
-    card: { flex: 1, minWidth: '320px', backgroundColor: '#c3dfecff', padding: '20px', borderRadius: '4px', border: '1px solid #999' },
+    card: { flex: 1, minWidth: '320px', backgroundColor: '#edf9ffff', padding: '20px', borderRadius: '4px', border: '1px solid #999' },
     formGroup: { display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '15px' },
     input: { padding: '10px', borderRadius: '4px', border: '1px solid #999', backgroundColor: '#fff', color: '#000000ff' },
     select: { padding: '10px', borderRadius: '4px', border: '1px solid #999', backgroundColor: '#fff' },
@@ -76,7 +76,7 @@ function App() {
     return (
       <div style={estilos.centralizado}>
         <div style={estilos.caixaAcesso}>
-          <h1 style={{ margin: '0 0 20px 0', paddingBottom: '10px', borderBottom: '2px solid #ffffffff' }}>CMM Login</h1>
+          <h1 style={{ margin: '0 0 20px 0', color: '#00364f', paddingBottom: '10px', borderBottom: '2px solid #ffffffff' }}>CMM Login</h1>
           <form onSubmit={executarLogin} style={estilos.formGroup}>
             <input 
               style={estilos.input} 
@@ -109,7 +109,7 @@ function App() {
     return (
       <div style={estilos.centralizado}>
         <div style={estilos.caixaAcesso}>
-          <h1 style={{ margin: '0 0 20px 0', paddingBottom: '10px', borderBottom: '2px solid #000' }}>Criar Conta</h1>
+          <h1 style={{ margin: '0 0 20px 0', color: '#00364f', paddingBottom: '10px', borderBottom: '2px solid #000' }}>Criar Conta</h1>
           <form onSubmit={executarRegistro} style={estilos.formGroup}>
             <input 
               style={estilos.input} 
@@ -157,7 +157,7 @@ function App() {
   return (
     <div style={estilos.corpo}>
       <header style={estilos.header}>
-        <h1 style={{ margin: 0, fontSize: '24px' }}>CMM - Painel de Itens Ativos</h1>
+        <h1 style={{ margin: 0, color: '#00364f', fontSize: '24px' }}>CMM - Painel de Itens Ativos</h1>
         <button style={{ ...estilos.btn, backgroundColor: '#00364F', color: '#ffffffff' }} onClick={() => setTelaAtual('login')}>
           Sair
         </button>
@@ -167,7 +167,7 @@ function App() {
         
         {/* Formulário para Adicionar Máquina */}
         <section style={estilos.card}>
-          <h2>Adicionar Nova Máquina</h2>
+          <h2 style={{color: '#00364f'}}>Adicionar Nova Máquina</h2>
           <form onSubmit={adicionarMaquina} style={estilos.formGroup}>
             <input 
               style={estilos.input}
@@ -202,7 +202,7 @@ function App() {
 
         {/* Coluna: Faltam Fazer (Necessitam de Manutenção) */}
         <section style={estilos.card}>
-          <h2 style={{ borderBottom: '1px solid #444', paddingBottom: '5px' }}>Faltam Fazer</h2>
+          <h2 style={{ borderBottom: '1px solid #444', color:'#00364f', paddingBottom: '5px' }}>Faltam Fazer</h2>
           <p style={{ fontSize: '13px', color: '#444' }}>Máquinas aguardando intervenção técnica:</p>
           {maquinas.filter(m => m.precisaManutencao).length === 0 ? (
             <p style={{ fontStyle: 'italic', color: '#555' }}>Nenhuma máquina necessitando de reparos.</p>
@@ -225,7 +225,7 @@ function App() {
 
         {/* Coluna: Não Precisam de Manutenção */}
         <section style={estilos.card}>
-          <h2 style={{ borderBottom: '1px solid #000', paddingBottom: '5px' }}>Não Precisam</h2>
+          <h2 style={{ borderBottom: '1px solid #000', color: '#00364f', paddingBottom: '5px' }}>Não Precisam</h2>
           <p style={{ fontSize: '13px', color: '#444' }}>Equipamentos operando normalmente:</p>
           {maquinas.filter(m => !m.precisaManutencao).length === 0 ? (
             <p style={{ fontStyle: 'italic', color: '#00364F' }}>Nenhum ativo operacional listado.</p>
@@ -235,7 +235,7 @@ function App() {
                 <li key={maquina.id} style={estilos.item}>
                   <div>
                     <strong>{maquina.nome}</strong> <br />
-                    <span style={{ fontSize: '12px', color: '#ffffffff' }}>Setor/Cat: {maquina.categoria}</span>
+                    <span style={{ fontSize: '12px', color: '#444' }}>Setor/Cat: {maquina.categoria}</span>
                   </div>
                   <button style={estilos.btnStatus} onClick={() => alternarStatusManutencao(maquina.id)}>
                     Colocar em Manutenção
