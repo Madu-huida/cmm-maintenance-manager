@@ -93,7 +93,7 @@ function App() {
     select: { padding: '10px', borderRadius: '4px', border: '1px solid #999', backgroundColor: '#fff' },
     btn: { padding: '10px', backgroundColor: '#000000', color: '#ffffff', border: 'none', cursor: 'pointer', borderRadius: '4px', fontWeight: 'bold' },
     btnLink: { background: 'none', border: 'none', color: '#000', textDecoration: 'underline', cursor: 'pointer', marginTop: '15px', fontSize: '14px' },
-    btnStatus: { padding: '5px 10px', backgroundColor: '#fff', border: '1px solid #000', borderRadius: '4px', cursor: 'pointer', marginTop: '5px', fontSize: '12px' },
+    btnStatus: { padding: '5px 10px', backgroundColor: '#ffffff', color:'#000', border: '1px solid #000', borderRadius: '4px', cursor: 'pointer', marginTop: '5px', fontSize: '12px' },
     lista: { listStyle: 'none', padding: 0 },
     item: { borderBottom: '1px solid #999', padding: '15px 0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' },
     alerta: { color: '#900', backgroundColor: '#fcc', padding: '10px', borderRadius: '4px', marginBottom: '15px', fontSize: '14px', border: '1px solid #c00' }
