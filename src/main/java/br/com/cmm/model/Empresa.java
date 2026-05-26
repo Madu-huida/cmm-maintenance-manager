@@ -13,10 +13,14 @@ public class Empresa {
     private Long id;
 
     @Column(nullable = false)
-    private String nome;
+    private String nomeEmpresa;
 
     @Column(nullable = false, unique = true)
     private String cnpj;
 
-    private String endereco;
+    @Column(nullable = false, unique = true)
+    private String email;
+
+    @Column(nullable = false)
+    private String senha;
 }
