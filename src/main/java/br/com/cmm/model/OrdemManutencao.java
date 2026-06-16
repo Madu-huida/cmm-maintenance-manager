@@ -27,14 +27,38 @@ public class OrdemManutencao {
     @Column(nullable = false)
     private StatusOrdem status = StatusOrdem.ABERTA;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private TipoOrdem tipo;
+
+    private Double horasTrabalhadas;
+
+    private Double custoPecas;
+
+    private Double custoTotal;
+
     @ManyToOne
     @JoinColumn(name = "ativo_id", nullable = false)
     private Ativo ativo;
 
+    @ManyToOne
+    @JoinColumn(name = "tecnico_id")
+    private Usuario tecnico;
+
+    @ManyToOne
+    @JoinColumn(name = "solicitante_id")
+    private Usuario solicitante;
+
     public enum StatusOrdem {
-        ABERTA, 
-        EM_ANDAMENTO, 
-        CONCLUIDA, 
+        ABERTA,
+        EM_ATENDIMENTO,
+        AGUARDANDO_PECA,
+        CONCLUIDA,
         CANCELADA
+    }
+
+    public enum TipoOrdem {
+        PREVENTIVA,
+        CORRETIVA
     }
 }

@@ -2,7 +2,6 @@ package br.com.cmm.model;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class RegrasNegocioTest {
 
@@ -27,23 +26,15 @@ public class RegrasNegocioTest {
     }
 
     @Test
-    public void deveAtribuirNomeCorretamente() {
-        Ativo ativo = new Ativo();
-        ativo.setNome("Torno CNC");
-        assertEquals("Torno CNC", ativo.getNome());
+    public void deveCriarOrdemComStatusAbertaPorPadrao() {
+        OrdemManutencao ordem = new OrdemManutencao();
+        assertEquals(OrdemManutencao.StatusOrdem.ABERTA, ordem.getStatus());
     }
 
     @Test
-    public void deveAtribuirCategoriaCorretamente() {
-        Ativo ativo = new Ativo();
-        ativo.setCategoria("Mecânica");
-        assertEquals("Mecânica", ativo.getCategoria());
-    }
-
-    @Test
-    public void deveAtribuirLocalizacaoCorretamente() {
-        Ativo ativo = new Ativo();
-        ativo.setLocalizacao("Galpão A");
-        assertEquals("Galpão A", ativo.getLocalizacao());
+    public void deveSuportarStatusAguardandoPeca() {
+        OrdemManutencao ordem = new OrdemManutencao();
+        ordem.setStatus(OrdemManutencao.StatusOrdem.AGUARDANDO_PECA);
+        assertEquals(OrdemManutencao.StatusOrdem.AGUARDANDO_PECA, ordem.getStatus());
     }
 }
